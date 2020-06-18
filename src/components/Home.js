@@ -8,10 +8,12 @@ import SearchBar from "./elements/SearchBar";
 import Spinner from "./elements/Spinner";
 
 import {useHomeFetch} from "./hooks/useHomeFetch";
-import { IMAGE_BASE_URL, BACKDROP_SIZE } from "../config";
+import { IMAGE_BASE_URL, BACKDROP_SIZE, POSTER_SIZE } from "../config";
+import NoImage from "./images/no_image.jpg";
 
 const Home = () => {
     const [{state, loading, error}, fetchMovies] = useHomeFetch();
+    const [searchTerm, setSearchTerm] = React.useState("");
     console.log(state);
 
     if (error) return <div>Something went wrong..</div>;
@@ -25,7 +27,21 @@ const Home = () => {
                 text={state.heroImage.overview}
             />
             <SearchBar />
-            <Grid />
+            <Grid header={searchTerm ? "Search Result" : "Popular Movies"}>
+                {state.movies.map(movie => (
+                    <MovieThumb
+                        key={movie.id}
+                        clickable
+                        image={
+                            movie.poster_path ? 
+                            `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}` :
+                            `${NoImage}`
+                        }
+                        movieId={movie.id}
+                        movieName={movie.original_title}
+                    />
+                ))}
+            </Grid>
             <MovieThumb />
             <Spinner />
             <LoadMoreBtn />
