@@ -8,16 +8,23 @@ import SearchBar from "./elements/SearchBar";
 import Spinner from "./elements/Spinner";
 
 import {useHomeFetch} from "./hooks/useHomeFetch";
-import { IMAGE_BASE_URL, BACKDROP_SIZE, POSTER_SIZE, API_URL, API_KEY } from "../config";
+import {IMAGE_BASE_URL, BACKDROP_SIZE, POSTER_SIZE, SEARCH_BASE_URL, POPULAR_BASE_URL} from "../config";
 import NoImage from "./images/no_image.jpg";
 
 const Home = () => {
     const [{state, loading, error}, fetchMovies] = useHomeFetch();
     const [searchTerm, setSearchTerm] = React.useState("");
 
+    const searchMovies = search => {
+        const endpoint = search ? SEARCH_BASE_URL + search : POPULAR_BASE_URL;
+
+        setSearchTerm(search);
+        fetchMovies(endpoint);
+    }
+
     const loadMoreMovies = () => {
-        const searchEndpoint = `${API_URL}search/movie?api_key=${API_KEY}&query=${searchTerm}&page=${state.currentPage + 1}`;
-        const popularEndpoint = `${API_URL}movie/popular?api_key=${API_KEY}&page=${state.currentPage + 1}`;
+        const searchEndpoint = `${SEARCH_BASE_URL}${searchTerm}&page=${state.currentPage + 1}`;
+        const popularEndpoint = `${POPULAR_BASE_URL}&page=${state.currentPage + 1}`;
 
         const endpoint = searchTerm ? searchEndpoint : popularEndpoint;
         fetchMovies(endpoint);
@@ -28,12 +35,14 @@ const Home = () => {
     console.log("State here", state);
     return (
         <>
-            <HeroImage 
-                image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${state.heroImage.backdrop_path}`}
-                title={state.heroImage.original_title}
-                text={state.heroImage.overview}
-            />
-            <SearchBar />
+            {!searchTerm && (
+                <HeroImage 
+                    image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${state.heroImage.backdrop_path}`}
+                    title={state.heroImage.original_title}
+                    text={state.heroImage.overview}
+                />
+            )}
+            <SearchBar callback={searchMovies} />
             <Grid header={searchTerm ? "Search Result" : "Popular Movies"}>
                 {state.movies.map(movie => (
                     <MovieThumb
