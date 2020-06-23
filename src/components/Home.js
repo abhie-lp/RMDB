@@ -12,8 +12,8 @@ import {IMAGE_BASE_URL, BACKDROP_SIZE, POSTER_SIZE, SEARCH_BASE_URL, POPULAR_BAS
 import NoImage from "./images/no_image.jpg";
 
 const Home = () => {
-    const [{state, loading, error}, fetchMovies] = useHomeFetch();
     const [searchTerm, setSearchTerm] = React.useState("");
+    const [{state, loading, error}, fetchMovies] = useHomeFetch(searchTerm);
 
     const searchMovies = search => {
         const endpoint = search ? SEARCH_BASE_URL + search : POPULAR_BASE_URL;
