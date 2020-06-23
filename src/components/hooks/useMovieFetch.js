@@ -3,7 +3,7 @@ import {API_URL, API_KEY} from "../../config";
 
 export const useMovieFetch = movieId => {
     const [state, setState] = React.useState({});
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState(false);
 
     const fetchData = React.useCallback(async () => {

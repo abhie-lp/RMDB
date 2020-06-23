@@ -13,12 +13,12 @@ const Movie = ({movieId}) => {
     console.log(movie);
 
     if (error) return <div>Something went awfully wrong. Khhed hai.</div>;
-    if (loading) return <Spinner />;
+    if (loading) return <Spinner />
 
     return (
         <>
             <Navigation movie={movie.original_title}/>
-            <MovieInfo />
+            <MovieInfo movie={movie} />
             <MovieInfoBar />
             <Grid>
                 <Actor />
